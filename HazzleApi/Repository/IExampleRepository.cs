@@ -1,29 +1,27 @@
 ﻿using HazzleApi.Models;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace HazzleApi.Repository
 {
     public interface IExampleRepository
     {
-        Task<ExampleModel> FirstAsync(Expression<Func<ExampleModel, bool>> predicate);
-        Task<ExampleModel> FirstOrDefaultAsync(Expression<Func<ExampleModel, bool>> predicate);
+        Task<ExampleModel> FirstAsync(Func<ExampleModel, bool> predicate);
+        Task<ExampleModel> FirstOrDefaultAsync(Func<ExampleModel, bool> predicate);
 
         /// <summary>
         /// Get all queries
         /// </summary>
-        /// <returns>IQueryable queries</returns>
+        /// <returns>IEnumerable queries</returns>
         IEnumerable<ExampleModel> GetAll();
 
         /// <summary>
         /// Find queries by predicate
         /// </summary>
         /// <param name="predicate">search predicate (LINQ)</param>
-        /// <returns>IQueryable queries</returns>
-        IEnumerable<ExampleModel> FindBy(Expression<Func<ExampleModel, bool>> predicate);
+        /// <returns>IEnumerable queries</returns>
+        IEnumerable<ExampleModel> FindBy(Func<ExampleModel, bool> predicate);
 
         /// <summary>
         /// Find entity by keys

@@ -1,19 +1,19 @@
 ﻿using HazzleApi.Models;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace HazzleApi.Repository
 {
     public class ExampleRepository : IExampleRepository
     {
-        List<ExampleModel> list { get; set; }
+        List<ExampleModel> ExampleList { get; set; }
         public ExampleRepository()
         {
             //This is just Example code, for simulate db data...
-            list = new List<ExampleModel>();
+            ExampleList = new List<ExampleModel>();
             var item = new ExampleModel
             {
                 Name = "test",
@@ -54,11 +54,11 @@ namespace HazzleApi.Repository
                 JobTitle = "something",
                 Age = 43
             };
-            list.Add(item);
-            list.Add(item2);
-            list.Add(item3);
-            list.Add(item4);
-            list.Add(item5);
+            ExampleList.Add(item);
+            ExampleList.Add(item2);
+            ExampleList.Add(item3);
+            ExampleList.Add(item4);
+            ExampleList.Add(item5);
 
         }
 
@@ -74,7 +74,7 @@ namespace HazzleApi.Repository
 
         public void Delete(int id)
         {
-            list.Remove(list.FirstOrDefault(item => item.Id == id));
+            ExampleList.Remove(ExampleList.FirstOrDefault(item => item.Id == id));
         }
 
         public Task<ExampleModel> FindAsync(params object[] keys)
@@ -82,24 +82,25 @@ namespace HazzleApi.Repository
             throw new NotImplementedException();
         }
 
-        public IEnumerable<ExampleModel> FindBy(Expression<Func<ExampleModel, bool>> predicate)
+        public IEnumerable<ExampleModel> FindBy(Func<ExampleModel, bool> predicate)
         {
-            throw new NotImplementedException();
+            return ExampleList.Where(predicate);
         }
 
-        public Task<ExampleModel> FirstAsync(Expression<Func<ExampleModel, bool>> predicate)
+        public Task<ExampleModel> FirstAsync(Func<ExampleModel, bool> predicate)
         {
-            throw new NotImplementedException();
+            return (Task<ExampleModel>)ExampleList.Where(predicate);
+           
         }
 
-        public Task<ExampleModel> FirstOrDefaultAsync(Expression<Func<ExampleModel, bool>> predicate)
+        public Task<ExampleModel> FirstOrDefaultAsync(Func<ExampleModel, bool> predicate)
         {
             throw new NotImplementedException();
         }
 
         public IEnumerable<ExampleModel> GetAll()
         {
-            return list;
+            return ExampleList;
         }
 
         public void SaveChanges()

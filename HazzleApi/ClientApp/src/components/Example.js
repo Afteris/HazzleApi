@@ -1,4 +1,5 @@
 ﻿import React, { useState, useEffect } from 'react';
+import AddUser from './AddUser';
 
 
 export function Example() {
@@ -7,24 +8,44 @@ export function Example() {
     const [loading, setLoading] = useState(true);
     useEffect(() => {
         (async () => {
-            const response = await fetch("api/example");
+            const response = await fetch(`api/example`);
             const data = await response.json();
             setUsers(data);
             setLoading(false);
         })();
     }, []);
-
     const handleDelete = (id) => {
-
-        fetch(`api/example/${id}`, { method: 'DELETE' }).then(res => {
+        fetch(`api/example/${id}`, {
+            method: 'DELETE'
+        }).then(res => {
             const del = users.filter(user => id !== user.id)
             setUsers(del)
+        }).then(data => console.log(data));
+    };
+    const create = user => {
+        console.log(JSON.stringify(user));
+        fetch('api/example', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(user)
+        }).then(res => {
+            console.log(res);
         })
     };
-
+    const addUser = (user) => {
+        
+        user.id = users.length + 1;
+        create(user);
+        setUsers([...users, user])
+    }
     return (
         <div>
-            
+            <div>
+                <AddUser addUser={addUser} />
+            </div>
             <div>
                 {loading ? renderLoadingMessage() :
                 <table>

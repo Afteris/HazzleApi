@@ -1,13 +1,13 @@
 ﻿using HazzleApi.Models;
 using HazzleApi.Repository;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace HazzleApi.Services
 {
     public class ExampleService : IExampleService
     {
-
-        IExampleRepository _repository;
+        private readonly IExampleRepository _repository;
 
         public ExampleService(IExampleRepository repository)
         {
@@ -45,6 +45,16 @@ namespace HazzleApi.Services
         {
             _repository.Delete(id);
 
+            return true;
+        }
+
+        public ExampleModel GetExampleModel(int id)
+        {
+            return _repository.FindBy(item => item.Id == id).First();
+        }
+
+        public bool UpdateExampleModel(ExampleModel model)
+        {
             return true;
         }
     }
