@@ -7,14 +7,14 @@ namespace HazzleApi.Services
 {
     public class ExampleService : IExampleService
     {
-        private readonly IExampleRepository _repository;
+        private readonly IExampleRepository<ExampleModel> _repository;
 
-        public ExampleService(IExampleRepository repository)
+        public ExampleService(IExampleRepository<ExampleModel> repository)
         {
             _repository = repository;
         }
 
-        protected bool ValidateModel(ExampleModel exampleModel)
+        protected bool ValidateModel(ExampleVM exampleModel)
         {
 
             //Data validation...
@@ -23,16 +23,16 @@ namespace HazzleApi.Services
 
         public IEnumerable<ExampleModel> GetExampleModels()
         {
+            
             return _repository.GetAll();
         }
 
         public bool CreateExampleModel(ExampleModel exampleModel)
         {
-       
-            // Database logic
             try
             {
-                _repository.AddAsync(exampleModel);
+                _repository.Add(exampleModel);
+                _repository.SaveChanges();
             }
             catch
             {
@@ -43,8 +43,15 @@ namespace HazzleApi.Services
 
         public bool DeleteExampleModel(int id)
         {
-            _repository.Delete(id);
-
+            try
+            {
+                _repository.Delete(id);
+                _repository.SaveChanges();
+            }
+            catch
+            {
+                return false;
+            }
             return true;
         }
 

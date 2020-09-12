@@ -7,7 +7,9 @@ using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-
+using Microsoft.EntityFrameworkCore;
+using HazzleApi.Models;
+using AutoMapper;
 
 namespace HazzleApi
 {
@@ -23,14 +25,23 @@ namespace HazzleApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            var mapperConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new MappingProfile());
+            });
 
+            IMapper mapper = mapperConfig.CreateMapper();
+            services.AddSingleton(mapper);
             services.AddControllersWithViews();
 
             services.AddScoped<IStatisticsCenterProvider, StatisticsCenterProvider>();
             services.AddScoped<IExampleService, ExampleService>();
-            //Singleton is used only for demo purpose (repository demo data would not otherwise be updated, per call)
-            services.AddSingleton<IExampleRepository, ExampleRepository>();
             
+            services.AddScoped<IExampleRepository<ExampleModel>, ExampleRepository>();
+            // Add database services.
+            
+            services.AddDbContext<ExampleDBContext>(options =>
+            options.UseSqlServer(Configuration.GetConnectionString("DemoDB")));
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
             {

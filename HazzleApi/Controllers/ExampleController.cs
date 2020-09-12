@@ -1,6 +1,10 @@
 ﻿using System.Collections.Generic;
+using System.Net;
+using System.Net.Mime;
+using AutoMapper;
 using HazzleApi.Models;
 using HazzleApi.Services;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 
@@ -12,48 +16,62 @@ namespace HazzleApi.Controllers
     [ApiController]
     public class ExampleController : ControllerBase
     {
-        private readonly IExampleService exampleService;
-        public ExampleController(IExampleService _exampleService) 
+        private readonly IExampleService _exampleService;
+        private readonly IMapper _mapper;
+
+        public ExampleController(IExampleService exampleService, IMapper mapper) 
         {
-            exampleService = _exampleService;
+            _exampleService = exampleService;
+            _mapper = mapper;
+
         }
         // GET: api/<ExampleController>
         [HttpGet]
         public IEnumerable<ExampleModel> Get()
         {
             
-            return exampleService.GetExampleModels(); 
+            return _exampleService.GetExampleModels(); 
 
         }
 
         // GET api/<ExampleController>/5
         [HttpGet("{id}")]
-        public ExampleModel Get(int id)
+        public ExampleModel GetById(int id)
         {
-           return exampleService.GetExampleModel(id);
+           return _exampleService.GetExampleModel(id);
         }
 
         // POST api/<ExampleController>
         [HttpPost]
-        public void Post([FromBody] ExampleModel model)
+        [Consumes(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public ActionResult Post([FromBody] ExampleVM model)
         {
-                       
-            exampleService.CreateExampleModel(model);
-        
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var exampleModel = _mapper.Map<ExampleModel>(model);
+            _exampleService.CreateExampleModel(exampleModel);
+
+
+            return CreatedAtAction(nameof(GetById), new { id = exampleModel.Id }, exampleModel);
         }
 
         // PUT api/<ExampleController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] ExampleModel model)
+        public void Put(int id, [FromBody] ExampleVM model)
         {
-            exampleService.UpdateExampleModel(model);
+            var exampleModel = _mapper.Map<ExampleModel>(model);
+            _exampleService.UpdateExampleModel(exampleModel);
         }
 
         // DELETE api/<ExampleController>/5
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
-            exampleService.DeleteExampleModel(id);
+            _exampleService.DeleteExampleModel(id);
         }
     }
 }

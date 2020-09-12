@@ -9,7 +9,7 @@ namespace HazzleApi.Services
 
         ExampleModel GetExampleModel(int id);
 
-        bool CreateExampleModel(ExampleModel exampleModel);
+        bool CreateExampleModel(ExampleModel model);
 
         bool DeleteExampleModel(int id);
         bool UpdateExampleModel(ExampleModel model);

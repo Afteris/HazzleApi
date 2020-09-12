@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace HazzleApi.Repository
 {
-    public interface IExampleRepository
+    public interface IExampleRepository<TEntity>
     {
         Task<ExampleModel> FirstAsync(Func<ExampleModel, bool> predicate);
         Task<ExampleModel> FirstOrDefaultAsync(Func<ExampleModel, bool> predicate);
@@ -36,6 +36,13 @@ namespace HazzleApi.Repository
         /// <param name="entity"></param>
         /// <returns></returns>
         Task AddAsync(ExampleModel entity);
+
+        /// <summary>
+        /// Add new entity
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns>Added entity id</returns>
+        int Add(ExampleModel entity);
 
         /// <summary>
         /// Remove entity from database
