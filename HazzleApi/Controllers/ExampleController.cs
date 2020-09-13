@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using System.Net;
 using System.Net.Mime;
+using System.Threading.Tasks;
 using AutoMapper;
 using HazzleApi.Models;
 using HazzleApi.Services;
@@ -36,6 +36,8 @@ namespace HazzleApi.Controllers
 
         // GET api/<ExampleController>/5
         [HttpGet("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ExampleModel GetById(int id)
         {
            return _exampleService.GetExampleModel(id);
@@ -55,23 +57,38 @@ namespace HazzleApi.Controllers
             var exampleModel = _mapper.Map<ExampleModel>(model);
             _exampleService.CreateExampleModel(exampleModel);
 
-
             return CreatedAtAction(nameof(GetById), new { id = exampleModel.Id }, exampleModel);
         }
 
         // PUT api/<ExampleController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] ExampleVM model)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        public async Task<IActionResult> Put(int id, [FromBody] ExampleVM model)
         {
             var exampleModel = _mapper.Map<ExampleModel>(model);
-            _exampleService.UpdateExampleModel(exampleModel);
+            await _exampleService.UpdateExampleModelAsync(exampleModel);
+
+            return Ok();
         }
 
         // DELETE api/<ExampleController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public ActionResult Delete(int id)
         {
-            _exampleService.DeleteExampleModel(id);
+            if (_exampleService.GetExampleModel(id) == null)
+            {
+                return NotFound();
+            }
+            if (_exampleService.DeleteExampleModel(id))
+            {
+                return NoContent();
+            }
+            return BadRequest();
         }
     }
 }

@@ -60,12 +60,18 @@ namespace HazzleApi.Repository
         /// Edit entity
         /// </summary>
         /// <param name="entity"></param>
-        Task UpdateAsync(ExampleModel entity);
+        ExampleModel Update(ExampleModel entity);
+
+        /// <summary>
+        /// Edit entity
+        /// </summary>
+        /// <param name="entity"></param>
+        Task<int> UpdateAsync(ExampleModel entity);
 
         /// <summary>
         /// Persists all updates to the data source.
         /// </summary>
         void SaveChanges();
-        Task SaveChangesAsync();
+        Task<int> SaveChangesAsync();
     }
 }

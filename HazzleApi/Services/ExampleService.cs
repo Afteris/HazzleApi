@@ -2,6 +2,7 @@
 using HazzleApi.Repository;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace HazzleApi.Services
 {
@@ -14,7 +15,7 @@ namespace HazzleApi.Services
             _repository = repository;
         }
 
-        protected bool ValidateModel(ExampleVM exampleModel)
+        protected bool ValidateModel(ExampleModel exampleModel)
         {
 
             //Data validation...
@@ -57,12 +58,12 @@ namespace HazzleApi.Services
 
         public ExampleModel GetExampleModel(int id)
         {
-            return _repository.FindBy(item => item.Id == id).First();
+            return _repository.FindBy(item => item.Id == id).FirstOrDefault();
         }
 
-        public bool UpdateExampleModel(ExampleModel model)
+        public async Task<int> UpdateExampleModelAsync(ExampleModel model)
         {
-            return true;
+            return await _repository.UpdateAsync(model);
         }
     }
 }

@@ -10,7 +10,6 @@ namespace HazzleApi.Repository
     {
         readonly ExampleDBContext _exampleContext;
        
-        List<ExampleVM> ExampleList { get; set; }
         public ExampleRepository(ExampleDBContext context)
         {
             _exampleContext = context;
@@ -19,10 +18,9 @@ namespace HazzleApi.Repository
         {
             return _exampleContext.Add(entity).Entity.Id;
         }
-        public Task AddAsync(ExampleModel entity)
+        public async Task AddAsync(ExampleModel entity)
         {
-            throw new NotImplementedException();
-            
+            await _exampleContext.AddAsync(entity);
         }
 
         public void Delete(ExampleModel entity)
@@ -37,9 +35,9 @@ namespace HazzleApi.Repository
                 _exampleContext.ExampleModels.First(item => item.Id == id));
         }
 
-        public Task<ExampleModel> FindAsync(params object[] keys)
+        public async Task<ExampleModel> FindAsync(params object[] keys)
         {
-            throw new NotImplementedException();
+            return await _exampleContext.FindAsync<ExampleModel>(keys);
         }
 
         public IEnumerable<ExampleModel> FindBy(Func<ExampleModel, bool> predicate)
@@ -47,22 +45,19 @@ namespace HazzleApi.Repository
             return _exampleContext.ExampleModels.Where(predicate);
         }
 
-        public Task<ExampleModel> FirstAsync(Func<ExampleModel, bool> predicate)
+        public async Task<ExampleModel> FirstAsync(Func<ExampleModel, bool> predicate)
         {
-            return null; // (Task<ExampleModel>)ExampleList.Where(predicate);
-           
+            return await _exampleContext.FindAsync<ExampleModel>(predicate);       
         }
 
-        public Task<ExampleModel> FirstOrDefaultAsync(Func<ExampleModel, bool> predicate)
+        public async Task<ExampleModel> FirstOrDefaultAsync(Func<ExampleModel, bool> predicate)
         {
-            throw new NotImplementedException();
+            return await _exampleContext.FindAsync<ExampleModel>(predicate);
         }
 
         public IEnumerable<ExampleModel> GetAll()
-        {
-           
-            return _exampleContext.ExampleModels.ToList();
-        
+        {   
+            return _exampleContext.ExampleModels.ToList();  
         }
 
         public void SaveChanges()
@@ -70,14 +65,24 @@ namespace HazzleApi.Repository
             _exampleContext.SaveChanges();
         }
 
-        public Task SaveChangesAsync()
+        public async Task<int> SaveChangesAsync()
         {
-            return _exampleContext.SaveChangesAsync();
+            return await _exampleContext.SaveChangesAsync();
         }
 
-        public Task UpdateAsync(ExampleModel entity)
+        public ExampleModel Update(ExampleModel entity)
         {
-            throw new NotImplementedException();
+            return _exampleContext.Update(entity).Entity;
+        }
+
+        public async Task<int> UpdateAsync(ExampleModel entity)
+        {
+            return await Task.Run(() =>
+            {
+                _exampleContext.Update(entity);
+                return _exampleContext.SaveChangesAsync();
+                
+            });
         }
     }
 }

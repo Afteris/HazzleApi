@@ -1,5 +1,6 @@
 ﻿using HazzleApi.Models;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace HazzleApi.Services
 {
@@ -12,6 +13,6 @@ namespace HazzleApi.Services
         bool CreateExampleModel(ExampleModel model);
 
         bool DeleteExampleModel(int id);
-        bool UpdateExampleModel(ExampleModel model);
+        Task<int> UpdateExampleModelAsync(ExampleModel model);
     }
 }
