@@ -6,10 +6,12 @@ const AddUser = (props) => {
     const [user, setUser] = useState(initialFormState)
     const handleInputChange = (event) => {
         const { name, value } = event.target
-
         setUser({ ...user, [name]: value })
     }
-
+    const handleNumberInputChange = (event) => {
+        const { name, value } = event.target
+        setUser({ ...user, [name]: parseInt(value) })
+    }
     return (
         <form
             onSubmit={(event) => {
@@ -40,7 +42,7 @@ const AddUser = (props) => {
                 min="1"
                 max="99"
                 value={user.age}
-                onChange={handleInputChange}
+                onChange={handleNumberInputChange}
             />
             <label>Job title</label>
             <input

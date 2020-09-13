@@ -1,6 +1,7 @@
 ﻿import React, { useState, useEffect } from 'react';
 import AddUser from './AddUser';
 
+const URL = 'api/example';
 
 export function Example() {
    
@@ -8,36 +9,40 @@ export function Example() {
     const [loading, setLoading] = useState(true);
     useEffect(() => {
         (async () => {
-            const response = await fetch(`api/example`);
+            const response = await fetch(URL);
             const data = await response.json();
             setUsers(data);
             setLoading(false);
         })();
     }, []);
     const handleDelete = (id) => {
-        fetch(`api/example/${id}`, {
+        fetch(`${URL}/${id}`, {
             method: 'DELETE'
+        }).catch(error => {
+            console.log(error);
         }).then(res => {
             const del = users.filter(user => id !== user.id)
             setUsers(del)
         }).then(data => console.log(data));
     };
-    const create = user => {
-        console.log(JSON.stringify(user));
-        fetch('api/example', {
+    const create = (user) => {
+        fetch(URL, {
             method: 'POST',
+            mode: 'cors',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(user)
+        }).catch(error => {
+            console.log(error);
         }).then(res => {
+            user.id = res.id;
             console.log(res);
         })
     };
     const addUser = (user) => {
         
-        user.id = users.length + 1;
         create(user);
         setUsers([...users, user])
     }
