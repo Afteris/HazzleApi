@@ -24,7 +24,6 @@ namespace HazzleApi.Services
 
         public IEnumerable<ExampleModel> GetExampleModels()
         {
-            
             return _repository.GetAll();
         }
 

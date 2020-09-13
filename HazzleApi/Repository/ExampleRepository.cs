@@ -1,4 +1,5 @@
 ﻿using HazzleApi.Models;
+using Microsoft.EntityFrameworkCore.Internal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -56,8 +57,12 @@ namespace HazzleApi.Repository
         }
 
         public IEnumerable<ExampleModel> GetAll()
-        {   
-            return _exampleContext.ExampleModels.ToList();  
+        {
+            if (_exampleContext.ExampleModels.Any())
+            {
+                return _exampleContext.ExampleModels.ToList();
+            }
+            return null;
         }
 
         public void SaveChanges()

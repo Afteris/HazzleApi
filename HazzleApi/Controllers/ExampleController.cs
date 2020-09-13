@@ -27,6 +27,8 @@ namespace HazzleApi.Controllers
         }
         // GET: api/<ExampleController>
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         public IEnumerable<ExampleModel> Get()
         {
             

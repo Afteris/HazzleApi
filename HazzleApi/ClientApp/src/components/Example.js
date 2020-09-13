@@ -10,8 +10,10 @@ export function Example() {
     useEffect(() => {
         (async () => {
             const response = await fetch(URL);
-            const data = await response.json();
-            setUsers(data);
+            if (response.status !== 204) {
+                const data = await response.json();
+                setUsers(data);
+            }
             setLoading(false);
         })();
     }, []);
